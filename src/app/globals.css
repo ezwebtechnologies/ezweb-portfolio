@@ -46,3 +46,9 @@ body {
     padding-right: max(1.75rem, env(safe-area-inset-right, 0px));
   }
 }
+
+/* Hero logo: large, capped so nav + Explore still fit */
+.ez-hero-logo {
+  width: min(94vw, 62dvh, 56rem);
+  height: min(94vw, 62dvh, 56rem);
+}

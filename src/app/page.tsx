@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { ServicesShowcase } from "@/components/services-showcase";
 import { absoluteUrl, site } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -18,10 +19,8 @@ export const metadata: Metadata = {
 
 export default function Home() {
   return (
-    <main className="flex flex-1 flex-col items-center justify-center gap-6 px-4 pb-8 pt-28 sm:pt-32">
-      <h1 className="sr-only">
-        {site.name} — websites, local SEO, Google Business optimization, and online branding for local businesses
-      </h1>
+    <main className="flex flex-1 flex-col">
+      <ServicesShowcase />
     </main>
   );
 }
