@@ -306,6 +306,8 @@ function OrbitNode({
   const iconPx = isActive ? ORBIT_LARGE_PX : ORBIT_SMALL_PX;
   const iconHalf = iconPx / 2;
 
+  const nodeTransition = reduceMotion ? { duration: 0 } : ringSpring;
+
   return (
     <motion.button
       type="button"
@@ -313,12 +315,16 @@ function OrbitNode({
       aria-current={isActive ? true : undefined}
       whileTap={reduceMotion ? undefined : { scale: 0.98 }}
       aria-label={`${label}${isActive ? ", selected" : ""}`}
-      className={`group absolute flex flex-col items-center gap-1 border-0 bg-transparent p-0 text-center outline-none ${isActive ? "max-w-[11rem]" : "max-w-[5.75rem]"}`}
-      style={{ transform: `translate(-${iconHalf}px, -${iconHalf}px)` }}
+      className={`group absolute flex flex-col items-center gap-1 border-0 bg-transparent p-0 text-center outline-none transition-[max-width] duration-300 ease-out ${isActive ? "max-w-[11rem]" : "max-w-[5.75rem]"}`}
+      initial={false}
+      animate={{ x: -iconHalf, y: -iconHalf }}
+      transition={nodeTransition}
     >
-      <span
+      <motion.span
         className={`flex shrink-0 items-center justify-center rounded-full p-[1px] shadow-[0_0_28px_-6px_rgba(139,92,246,0.35)] transition-[box-shadow,ring-color] duration-300 group-hover:shadow-[0_0_36px_-4px_rgba(167,139,250,0.45)] group-focus-visible:ring-2 group-focus-visible:ring-violet-400/50 ${isBrand ? `bg-gradient-to-br ${rim}` : rim} ${isActive ? "ring-2 ring-violet-400/75 shadow-[0_0_48px_-6px_rgba(167,139,250,0.5)]" : "ring-1 ring-violet-400/25 group-hover:ring-violet-400/40"}`}
-        style={{ width: iconPx, height: iconPx }}
+        initial={false}
+        animate={{ width: iconPx, height: iconPx }}
+        transition={nodeTransition}
       >
         <span className="flex size-full items-center justify-center rounded-full bg-[#07070c]/90 backdrop-blur-sm">
           {isBrand ? (
@@ -338,9 +344,9 @@ function OrbitNode({
             </span>
           )}
         </span>
-      </span>
+      </motion.span>
       <span
-        className={`pointer-events-none block w-full px-0.5 font-[family-name:var(--font-brand)] font-semibold leading-snug text-white ${isActive ? "text-sm sm:text-base" : "text-[10px] sm:text-[11px]"}`}
+        className={`pointer-events-none block w-full px-0.5 font-[family-name:var(--font-brand)] font-semibold leading-snug text-white transition-[font-size] duration-300 ease-out ${isActive ? "text-sm sm:text-base" : "text-[10px] sm:text-[11px]"}`}
       >
         {isBrand ? site.name : item.headline}
       </span>
