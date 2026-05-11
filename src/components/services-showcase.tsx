@@ -89,8 +89,8 @@ const ringSpring = { type: "spring" as const, stiffness: 138, damping: 34, mass:
 const ease = [0.22, 1, 0.36, 1] as const;
 
 /** Active larger than small orbit nodes; large state follows `activeIndex`, not array position */
-const ORBIT_SMALL_PX = 40;
-const ORBIT_LARGE_PX = 136;
+const ORBIT_SMALL_PX = 50;
+const ORBIT_LARGE_PX = Math.round((136 * ORBIT_SMALL_PX) / 40);
 
 /** Inactive nodes share this semicircle (inset from ±90°) so the four small icons stay tight */
 const ORBIT_CLUSTER_INSET_RAD = (9 * Math.PI) / 180;
@@ -145,14 +145,14 @@ function BenefitCheck({ className }: { className?: string }) {
 
 export function ServicesShowcase() {
   const [activeIndex, setActiveIndex] = useState(0);
-  const [orbitR, setOrbitR] = useState(128);
+  const [orbitR, setOrbitR] = useState(146);
   const reduceMotion = useReducedMotion();
   const active = ITEMS[activeIndex];
 
   useEffect(() => {
     const ro = () => {
       const w = window.innerWidth;
-      setOrbitR(w < 480 ? 96 : w < 1024 ? 128 : 160);
+      setOrbitR(w < 480 ? 110 : w < 1024 ? 146 : 182);
     };
     ro();
     window.addEventListener("resize", ro);
@@ -315,7 +315,7 @@ function OrbitNode({
       aria-current={isActive ? true : undefined}
       whileTap={reduceMotion ? undefined : { scale: 0.98 }}
       aria-label={`${label}${isActive ? ", selected" : ""}`}
-      className={`group absolute flex flex-col items-center gap-1 border-0 bg-transparent p-0 text-center outline-none transition-[max-width] duration-300 ease-out ${isActive ? "max-w-[11rem]" : "max-w-[5.75rem]"}`}
+      className={`group absolute flex flex-col items-center gap-1 border-0 bg-transparent p-0 text-center outline-none transition-[max-width] duration-300 ease-out ${isActive ? "max-w-[13rem]" : "max-w-[7rem]"}`}
       initial={false}
       animate={{ x: -iconHalf, y: -iconHalf }}
       transition={nodeTransition}
@@ -333,6 +333,7 @@ function OrbitNode({
               alt=""
               width={96}
               height={96}
+              priority
               unoptimized
               className={`object-contain ${isActive ? "size-[58%]" : "size-[45%]"}`}
             />
