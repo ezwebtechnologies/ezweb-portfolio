@@ -1,38 +1,45 @@
-import { absoluteUrl, site, siteLogoPath } from "@/lib/site";
+import { absoluteUrl, site, siteStructuredLogoPath } from "@/lib/site";
 
 export function OrganizationJsonLd() {
-  const organization = {
-    "@context": "https://schema.org",
-    "@type": "Organization",
-    name: site.name,
-    url: site.url,
-    description: site.seoDescription,
-    logo: absoluteUrl(siteLogoPath),
-  };
+  const base = site.url.replace(/\/$/, "");
+  const logoUrl = absoluteUrl(siteStructuredLogoPath);
 
-  const website = {
-    "@context": "https://schema.org",
-    "@type": "WebSite",
-    name: site.name,
-    url: site.url,
-    description: site.seoDescription,
-    publisher: {
+  const graph = [
+    {
       "@type": "Organization",
+      "@id": `${base}/#organization`,
       name: site.name,
-      logo: { "@type": "ImageObject", url: absoluteUrl(siteLogoPath) },
+      url: site.url,
+      description: site.seoDescription,
+      logo: {
+        "@type": "ImageObject",
+        url: logoUrl,
+        contentUrl: logoUrl,
+        width: 512,
+        height: 512,
+      },
+      image: logoUrl,
     },
-  };
+    {
+      "@type": "WebSite",
+      "@id": `${base}/#website`,
+      name: site.name,
+      url: site.url,
+      description: site.seoDescription,
+      inLanguage: "en",
+      publisher: { "@id": `${base}/#organization` },
+    },
+  ];
 
   return (
-    <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(organization) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(website) }}
-      />
-    </>
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{
+        __html: JSON.stringify({
+          "@context": "https://schema.org",
+          "@graph": graph,
+        }),
+      }}
+    />
   );
 }

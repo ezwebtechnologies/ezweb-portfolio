@@ -2,7 +2,15 @@ import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono, Syne } from "next/font/google";
 import { FloatingNavbar } from "@/components/navigation/floating-navbar";
 import { OrganizationJsonLd } from "@/components/organization-json-ld";
-import { absoluteUrl, site, siteLogoPath } from "@/lib/site";
+import {
+  absoluteUrl,
+  site,
+  siteAppleTouchIconPath,
+  siteFaviconPath,
+  siteIcon192Path,
+  siteOgImagePath,
+  siteStructuredLogoPath,
+} from "@/lib/site";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -24,7 +32,8 @@ const brandFont = Syne({
   display: "swap",
 });
 
-const ogImage = absoluteUrl(siteLogoPath);
+const ogImageUrl = absoluteUrl(siteOgImagePath);
+const canonicalUrl = absoluteUrl("/");
 
 export const viewport: Viewport = {
   themeColor: "#050508",
@@ -60,23 +69,29 @@ export const metadata: Metadata = {
       "max-snippet": -1,
     },
   },
-  alternates: { canonical: "/" },
+  alternates: { canonical: canonicalUrl },
   icons: {
-    icon: [{ url: "/favicon.ico", sizes: "any" }],
+    icon: [
+      { url: siteFaviconPath, sizes: "any" },
+      { url: siteStructuredLogoPath, sizes: "512x512", type: "image/png" },
+      { url: siteIcon192Path, sizes: "192x192", type: "image/png" },
+    ],
+    apple: [{ url: siteAppleTouchIconPath, sizes: "180x180", type: "image/png" }],
   },
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: site.url,
+    url: canonicalUrl,
     siteName: site.name,
     title: site.seoTitle,
     description: site.seoDescription,
     images: [
       {
-        url: ogImage,
+        url: ogImageUrl,
+        secureUrl: ogImageUrl,
         width: 1200,
         height: 630,
-        alt: `${site.name} logo`,
+        alt: `${site.name} — ${site.seoTitle}`,
         type: "image/png",
       },
     ],
@@ -85,7 +100,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: site.seoTitle,
     description: site.seoDescription,
-    images: [ogImage],
+    images: [{ url: ogImageUrl, alt: `${site.name} — ${site.seoTitle}` }],
   },
 };
 
@@ -97,12 +112,14 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} ${brandFont.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} ${brandFont.variable} h-full min-h-0 antialiased`}
     >
-      <body className="flex min-h-full flex-col bg-[#050508] text-zinc-100">
+      <body className="flex min-h-0 flex-col bg-[#050508] text-zinc-100 h-dvh max-h-dvh overflow-hidden">
         <OrganizationJsonLd />
         <FloatingNavbar />
-        {children}
+        <main className="fixed inset-x-0 bottom-0 z-0 flex min-h-0 flex-col overflow-hidden top-[var(--ez-nav-offset)]">
+          {children}
+        </main>
       </body>
     </html>
   );

@@ -3,6 +3,14 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  /* Space reserved under fixed floating nav (safe area + brand + pill height) */
+  --ez-nav-offset: calc(env(safe-area-inset-top, 0px) + 7.25rem);
+}
+
+@media (min-width: 640px) {
+  :root {
+    --ez-nav-offset: calc(env(safe-area-inset-top, 0px) + 8.25rem);
+  }
 }
 
 @theme inline {
@@ -19,7 +27,16 @@
   }
 }
 
+html {
+  height: 100dvh;
+  max-height: 100dvh;
+  overflow: hidden;
+}
+
 body {
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
   font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
 }
 
