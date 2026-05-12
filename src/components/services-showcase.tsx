@@ -169,7 +169,7 @@ export function ServicesShowcase() {
   const tSlow = reduceMotion ? 0 : 0.36;
   return (
     <section
-      className="relative w-full overflow-hidden px-4 pb-20 pt-32 sm:px-6 sm:pb-24 sm:pt-36 lg:pt-44 xl:pt-48"
+      className="relative flex h-full min-h-0 w-full flex-col overflow-hidden px-4 pb-4 pt-3 sm:px-6 sm:pb-5 sm:pt-4 lg:pt-5"
       aria-labelledby="services-orbit-heading"
     >
       <div
@@ -187,9 +187,9 @@ export function ServicesShowcase() {
         Services
       </h2>
 
-      <div className="relative mx-auto max-w-6xl">
-        <div className="flex flex-col gap-14 lg:flex-row lg:items-center lg:gap-0 lg:min-h-[min(560px,78svh)]">
-          <div className="relative z-30 w-full max-w-lg shrink-0 lg:max-w-[min(100%,26rem)] lg:pr-6 xl:pr-10">
+      <div className="relative mx-auto flex h-full min-h-0 w-full max-w-6xl flex-1 flex-col">
+        <div className="flex min-h-0 flex-1 flex-col gap-5 lg:flex-row lg:items-center lg:gap-0">
+          <div className="relative z-30 min-h-0 w-full max-w-lg shrink-0 overflow-y-auto overscroll-y-contain lg:max-w-[min(100%,26rem)] lg:overflow-visible lg:pr-6 xl:pr-10">
             <AnimatePresence mode="wait">
               <motion.div
                 key={active.kind === "brand" ? "ezweb" : active.id}
@@ -243,7 +243,7 @@ export function ServicesShowcase() {
             </AnimatePresence>
           </div>
 
-          <div className="relative z-10 flex min-h-[min(52vh,440px)] w-full flex-1 lg:min-h-[min(60vh,520px)] lg:-translate-x-6 xl:-translate-x-10">
+          <div className="relative z-10 flex min-h-0 min-w-0 flex-1 flex-col lg:-translate-x-6 xl:-translate-x-10">
             <div
               className="pointer-events-none absolute inset-0 opacity-70 blur-3xl"
               style={{
@@ -252,8 +252,8 @@ export function ServicesShowcase() {
               }}
             />
 
-            <div className="relative mx-auto flex h-full w-full max-w-[min(100%,540px)] items-center justify-center lg:mx-0 lg:max-w-none lg:justify-end lg:pr-2">
-              <div className="relative h-[min(72vw,420px)] w-full min-w-0 lg:h-[min(76vw,480px)] lg:w-[min(92vw,560px)]">
+            <div className="relative mx-auto flex min-h-0 w-full max-w-[min(100%,540px)] flex-1 items-center justify-center lg:mx-0 lg:max-w-none lg:justify-end lg:pr-2">
+              <div className="relative aspect-square w-[min(88vw,calc(100dvh-var(--ez-nav-offset)-9rem))] max-w-[28rem] shrink-0 lg:w-[min(34rem,min(68dvh,calc(100dvh-var(--ez-nav-offset)-5rem)))]">
                 <div className="absolute left-1/2 top-1/2 z-10 -translate-x-1/2 -translate-y-1/2">
                   <div className="relative h-0 w-0 overflow-visible">
                     {ITEMS.map((item, i) => {
