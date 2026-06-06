@@ -31,7 +31,7 @@ export function WorkShowcase() {
           <h1 className="font-[family-name:var(--font-brand)] text-3xl font-semibold tracking-[-0.02em] text-white sm:text-4xl lg:text-[2.25rem] xl:text-4xl">
             Work
           </h1>
-          <p className="mt-4 text-sm leading-relaxed text-zinc-400 sm:text-[15px]">
+          <p className="mt-4 text-sm leading-relaxed text-zinc-400 sm:text-[0.9375rem]">
             A snapshot of how we partner with local businesses—shipping fast sites, tightening local presence,
             and wiring measurement so growth is visible, not guessed.
           </p>

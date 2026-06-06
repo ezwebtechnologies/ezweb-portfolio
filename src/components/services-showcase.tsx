@@ -89,8 +89,20 @@ const ringSpring = { type: "spring" as const, stiffness: 138, damping: 34, mass:
 const ease = [0.22, 1, 0.36, 1] as const;
 
 /** Active larger than small orbit nodes; large state follows `activeIndex`, not array position */
-const ORBIT_SMALL_PX = 50;
-const ORBIT_LARGE_PX = Math.round((136 * ORBIT_SMALL_PX) / 40);
+const ORBIT_SMALL_BASE = 50;
+const ORBIT_LARGE_BASE = Math.round((136 * ORBIT_SMALL_BASE) / 40);
+
+function readOrbitScale() {
+  if (typeof window === "undefined") return 1;
+  const raw = getComputedStyle(document.documentElement).getPropertyValue("--ez-orbit-scale").trim();
+  const scale = parseFloat(raw);
+  return Number.isFinite(scale) ? scale : 1;
+}
+
+function orbitRadiusForWidth(width: number, scale: number) {
+  const base = width < 480 ? 110 : width < 1024 ? 146 : 182;
+  return Math.round(base * scale);
+}
 
 /** Inactive nodes share this semicircle (inset from ±90°) so the four small icons stay tight */
 const ORBIT_CLUSTER_INSET_RAD = (9 * Math.PI) / 180;
@@ -146,13 +158,16 @@ function BenefitCheck({ className }: { className?: string }) {
 export function ServicesShowcase() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [orbitR, setOrbitR] = useState(146);
+  const [orbitScale, setOrbitScale] = useState(1);
   const reduceMotion = useReducedMotion();
   const active = ITEMS[activeIndex];
 
   useEffect(() => {
     const ro = () => {
       const w = window.innerWidth;
-      setOrbitR(w < 480 ? 110 : w < 1024 ? 146 : 182);
+      const scale = readOrbitScale();
+      setOrbitScale(scale);
+      setOrbitR(orbitRadiusForWidth(w, scale));
     };
     ro();
     window.addEventListener("resize", ro);
@@ -203,7 +218,7 @@ export function ServicesShowcase() {
                 <h3 className="font-[family-name:var(--font-brand)] text-2xl font-semibold tracking-[-0.02em] text-white sm:text-3xl lg:text-[2rem] xl:text-4xl">
                   {active.headline}
                 </h3>
-                <p className="text-sm leading-relaxed text-zinc-400 sm:text-[15px]">{active.description}</p>
+                <p className="text-sm leading-relaxed text-zinc-400 sm:text-[0.9375rem]">{active.description}</p>
                 <ul className="flex flex-col gap-2.5">
                   {active.benefits.map((b) => (
                     <li key={b} className="flex gap-3 text-sm text-zinc-300">
@@ -272,6 +287,7 @@ export function ServicesShowcase() {
                             isActive={i === activeIndex}
                             onPick={() => pick(i)}
                             reduceMotion={reduceMotion}
+                            orbitScale={orbitScale}
                           />
                         </motion.div>
                       );
@@ -292,18 +308,20 @@ function OrbitNode({
   isActive,
   onPick,
   reduceMotion,
+  orbitScale,
 }: {
   item: OrbitItem;
   isActive: boolean;
   onPick: () => void;
   reduceMotion: boolean | null;
+  orbitScale: number;
 }) {
   const isBrand = item.kind === "brand";
   const rim = isBrand
     ? "from-violet-500 to-fuchsia-600"
     : `bg-gradient-to-br ${item.rim}`;
   const label = isBrand ? site.name : item.headline;
-  const iconPx = isActive ? ORBIT_LARGE_PX : ORBIT_SMALL_PX;
+  const iconPx = Math.round((isActive ? ORBIT_LARGE_BASE : ORBIT_SMALL_BASE) * orbitScale);
   const iconHalf = iconPx / 2;
 
   const nodeTransition = reduceMotion ? { duration: 0 } : ringSpring;
@@ -339,7 +357,7 @@ function OrbitNode({
             />
           ) : (
             <span
-              className={`max-w-[3.25rem] text-center font-[family-name:var(--font-brand)] font-semibold uppercase leading-tight text-white ${isActive ? "text-xs" : "text-[9px]"}`}
+              className={`max-w-[3.25rem] text-center font-[family-name:var(--font-brand)] font-semibold uppercase leading-tight text-white ${isActive ? "text-xs" : "text-[0.5625rem]"}`}
             >
               {item.tag}
             </span>
@@ -347,7 +365,7 @@ function OrbitNode({
         </span>
       </motion.span>
       <span
-        className={`pointer-events-none block w-full px-0.5 font-[family-name:var(--font-brand)] font-semibold leading-snug text-white transition-[font-size] duration-300 ease-out ${isActive ? "text-sm sm:text-base" : "text-[10px] sm:text-[11px]"}`}
+        className={`pointer-events-none block w-full px-0.5 font-[family-name:var(--font-brand)] font-semibold leading-snug text-white transition-[font-size] duration-300 ease-out ${isActive ? "text-sm sm:text-base" : "text-[0.625rem] sm:text-[0.6875rem]"}`}
       >
         {isBrand ? site.name : item.headline}
       </span>

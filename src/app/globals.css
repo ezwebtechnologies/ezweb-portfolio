@@ -3,6 +3,8 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --ez-ui-scale: 1;
+  --ez-orbit-scale: 1;
   /* Space reserved under fixed floating nav (safe area + brand + pill height) */
   --ez-nav-offset: calc(env(safe-area-inset-top, 0px) + 7.25rem);
 }
@@ -10,6 +12,13 @@
 @media (min-width: 640px) {
   :root {
     --ez-nav-offset: calc(env(safe-area-inset-top, 0px) + 8.25rem);
+  }
+}
+
+@media (min-width: 1920px) {
+  :root {
+    --ez-ui-scale: 1.25;
+    --ez-orbit-scale: 1.25;
   }
 }
 
@@ -31,6 +40,7 @@ html {
   height: 100dvh;
   max-height: 100dvh;
   overflow: hidden;
+  font-size: calc(100% * var(--ez-ui-scale));
 }
 
 body {
@@ -61,6 +71,55 @@ body {
 @media (min-width: 640px) {
   .ez-nav-row {
     padding-right: max(1.75rem, env(safe-area-inset-right, 0px));
+  }
+}
+
+.ez-nav-link {
+  position: relative;
+  white-space: nowrap;
+  padding: 0.875rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  color: rgb(228 228 231);
+  -webkit-font-smoothing: antialiased;
+  transition: color 300ms;
+}
+
+.ez-nav-link:hover {
+  color: rgb(255 255 255);
+}
+
+@media (min-width: 640px) {
+  .ez-nav-link {
+    padding: 1rem 1.5rem;
+    font-size: 1rem;
+    letter-spacing: 0.13em;
+  }
+}
+
+.ez-nav-link-glow::after {
+  pointer-events: none;
+  content: "";
+  position: absolute;
+  inset-inline: 1rem;
+  bottom: 0.5rem;
+  height: 2px;
+  border-radius: 9999px;
+  background: linear-gradient(to right, transparent, rgb(167 139 250 / 0.9), transparent);
+  opacity: 0;
+  box-shadow: 0 0 14px rgb(167 139 250 / 0.75);
+  transition: opacity 300ms;
+}
+
+.ez-nav-link-glow:hover::after {
+  opacity: 1;
+}
+
+@media (min-width: 640px) {
+  .ez-nav-link-glow::after {
+    inset-inline: 1.25rem;
+    bottom: 0.625rem;
   }
 }
 

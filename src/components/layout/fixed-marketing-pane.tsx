@@ -18,7 +18,7 @@ export function FixedMarketingPane({ title, description, children }: FixedMarket
         <h1 className="font-[family-name:var(--font-brand)] text-3xl font-semibold tracking-[-0.02em] text-white sm:text-4xl">
           {title}
         </h1>
-        <p className="mt-4 text-sm leading-relaxed text-zinc-400 sm:text-[15px]">{description}</p>
+        <p className="mt-4 text-sm leading-relaxed text-zinc-400 sm:text-[0.9375rem]">{description}</p>
         {children ? <div className="mt-8">{children}</div> : null}
       </div>
     </section>
