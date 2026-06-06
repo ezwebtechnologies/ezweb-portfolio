@@ -1,130 +1,112 @@
 @import "tailwindcss";
 
+/* Manual theme: dark is the base (no class); `.light` on <html> opts into light. */
+@custom-variant light (&:where(.light, .light *));
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
   --ez-ui-scale: 1;
   --ez-orbit-scale: 1;
-  /* Space reserved under fixed floating nav (safe area + brand + pill height) */
-  --ez-nav-offset: calc(env(safe-area-inset-top, 0px) + 7.25rem);
+  --ez-nav-h: 4.5rem;
+  /* Retained for the orbit showcase sizing math. */
+  --ez-nav-offset: 7rem;
+  /* Brand surfaces (dark default) */
+  --ez-bg: #050508;
+  --ez-fg: #fafafa;
 }
 
-@media (min-width: 640px) {
-  :root {
-    --ez-nav-offset: calc(env(safe-area-inset-top, 0px) + 8.25rem);
-  }
+html.light {
+  --ez-bg: #f7f7fb;
+  --ez-fg: #0a0a12;
 }
 
 @media (min-width: 1920px) {
   :root {
-    --ez-ui-scale: 1.25;
-    --ez-orbit-scale: 1.25;
+    --ez-ui-scale: 1.15;
+    --ez-orbit-scale: 1.15;
   }
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  --color-background: var(--ez-bg);
+  --color-foreground: var(--ez-fg);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  font-size: calc(100% * var(--ez-ui-scale));
+  scroll-behavior: smooth;
+  scroll-padding-top: calc(var(--ez-nav-h) + 1rem);
+  background: var(--ez-bg);
+  -webkit-text-size-adjust: 100%;
 }
 
-html {
-  height: 100dvh;
-  max-height: 100dvh;
-  overflow: hidden;
-  font-size: calc(100% * var(--ez-ui-scale));
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
 }
 
 body {
-  height: 100%;
-  min-height: 0;
-  overflow: hidden;
+  min-height: 100dvh;
+  background: var(--ez-bg);
+  color: var(--ez-fg);
   font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+  transition: background-color 400ms ease, color 400ms ease;
 }
 
-.ez-nav-brand {
-  position: absolute;
-  top: 50%;
-  z-index: 10;
-  transform: translateY(-50%);
-  left: max(3.5rem, env(safe-area-inset-left, 0px));
+/* ---- Animations ---- */
+@keyframes ez-float {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(0, -24px, 0) scale(1.06); }
 }
 
-@media (min-width: 640px) {
-  .ez-nav-brand {
-    left: max(4.5rem, env(safe-area-inset-left, 0px));
+@keyframes ez-float-slow {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50% { transform: translate3d(18px, 18px, 0); }
+}
+
+@keyframes ez-pulse-ring {
+  0% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.45); }
+  70% { box-shadow: 0 0 0 14px rgba(34, 197, 94, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
+}
+
+.ez-blob {
+  animation: ez-float 11s ease-in-out infinite;
+}
+.ez-blob-slow {
+  animation: ez-float-slow 16s ease-in-out infinite;
+}
+.ez-wa-pulse {
+  animation: ez-pulse-ring 2.4s ease-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ez-blob,
+  .ez-blob-slow,
+  .ez-wa-pulse {
+    animation: none;
   }
 }
 
-.ez-nav-row {
-  padding-right: max(1.5rem, env(safe-area-inset-right, 0px));
-}
-
-@media (min-width: 640px) {
-  .ez-nav-row {
-    padding-right: max(1.75rem, env(safe-area-inset-right, 0px));
-  }
-}
-
+/* ---- Navigation link ---- */
 .ez-nav-link {
   position: relative;
   white-space: nowrap;
-  padding: 0.875rem 1rem;
+  padding: 0.5rem 0.85rem;
   font-size: 0.875rem;
-  font-weight: 400;
-  letter-spacing: 0.12em;
-  color: rgb(228 228 231);
-  -webkit-font-smoothing: antialiased;
-  transition: color 300ms;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  color: rgb(212 212 216);
+  transition: color 200ms;
 }
-
 .ez-nav-link:hover {
-  color: rgb(255 255 255);
+  color: #fff;
 }
-
-@media (min-width: 640px) {
-  .ez-nav-link {
-    padding: 1rem 1.5rem;
-    font-size: 1rem;
-    letter-spacing: 0.13em;
-  }
+html.light .ez-nav-link {
+  color: rgb(63 63 70);
 }
-
-.ez-nav-link-glow::after {
-  pointer-events: none;
-  content: "";
-  position: absolute;
-  inset-inline: 1rem;
-  bottom: 0.5rem;
-  height: 2px;
-  border-radius: 9999px;
-  background: linear-gradient(to right, transparent, rgb(167 139 250 / 0.9), transparent);
-  opacity: 0;
-  box-shadow: 0 0 14px rgb(167 139 250 / 0.75);
-  transition: opacity 300ms;
-}
-
-.ez-nav-link-glow:hover::after {
-  opacity: 1;
-}
-
-@media (min-width: 640px) {
-  .ez-nav-link-glow::after {
-    inset-inline: 1.25rem;
-    bottom: 0.625rem;
-  }
-}
-
-/* Hero logo: large, capped so nav + Explore still fit */
-.ez-hero-logo {
-  width: min(94vw, 62dvh, 56rem);
-  height: min(94vw, 62dvh, 56rem);
+html.light .ez-nav-link:hover {
+  color: #000;
 }

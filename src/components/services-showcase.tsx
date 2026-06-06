@@ -1,10 +1,9 @@
 "use client";
 
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import Image from "next/image";
-import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
-import { navItemContact, site, siteLogoPath } from "@/lib/site";
+import { ServiceCartoon } from "@/components/services/service-cartoons";
+import { navItemContact } from "@/lib/site";
 
 type Service = {
   id: string;
@@ -16,16 +15,7 @@ type Service = {
   rim: string;
 };
 
-type OrbitItem =
-  | {
-      kind: "brand";
-      id: "ezweb";
-      headline: string;
-      description: string;
-      benefits: readonly string[];
-      tag: string;
-    }
-  | (Service & { kind: "service" });
+type OrbitItem = Service;
 
 const SERVICES: readonly Service[] = [
   {
@@ -68,20 +58,19 @@ const SERVICES: readonly Service[] = [
     gradient: "from-amber-500/25 via-orange-500/12 to-transparent",
     rim: "from-amber-500 to-orange-600",
   },
+  {
+    id: "automation",
+    headline: "Business automation",
+    description:
+      "Automate inquiries and routine workflows so you spend less time on busywork and more on customers.",
+    benefits: ["Workflow automation", "Customer inquiry handling", "Digital process optimization"],
+    tag: "Auto",
+    gradient: "from-sky-500/28 via-indigo-500/12 to-transparent",
+    rim: "from-sky-500 to-indigo-600",
+  },
 ];
 
-const ITEMS: readonly OrbitItem[] = [
-  {
-    kind: "brand",
-    id: "ezweb",
-    headline: site.name,
-    description:
-      "We help local businesses build a strong online presence—websites, Google Business, SEO, leads, and branding—in one focused partnership.",
-    benefits: ["Premium, fast websites", "Local discovery & SEO", "Clear leads & consistent branding"],
-    tag: "Studio",
-  },
-  ...SERVICES.map((s) => ({ ...s, kind: "service" as const })),
-];
+const ITEMS: readonly OrbitItem[] = SERVICES;
 
 const N = ITEMS.length;
 
@@ -89,8 +78,8 @@ const ringSpring = { type: "spring" as const, stiffness: 138, damping: 34, mass:
 const ease = [0.22, 1, 0.36, 1] as const;
 
 /** Active larger than small orbit nodes; large state follows `activeIndex`, not array position */
-const ORBIT_SMALL_BASE = 50;
-const ORBIT_LARGE_BASE = Math.round((136 * ORBIT_SMALL_BASE) / 40);
+const ORBIT_SMALL_BASE = 82;
+const ORBIT_LARGE_BASE = 248;
 
 function readOrbitScale() {
   if (typeof window === "undefined") return 1;
@@ -195,19 +184,16 @@ export function ServicesShowcase() {
         }}
       />
 
-      <h1 className="sr-only">
-        {site.name} — websites, local SEO, Google Business optimization, and online branding for local businesses
-      </h1>
-      <h2 id="services-orbit-heading" className="sr-only">
-        Services
-      </h2>
+      <h3 id="services-orbit-heading" className="sr-only">
+        Explore our services
+      </h3>
 
       <div className="relative mx-auto flex h-full min-h-0 w-full max-w-6xl flex-1 flex-col">
         <div className="flex min-h-0 flex-1 flex-col gap-5 lg:flex-row lg:items-center lg:gap-0">
           <div className="relative z-30 min-h-0 w-full max-w-lg shrink-0 overflow-y-auto overscroll-y-contain lg:max-w-[min(100%,26rem)] lg:overflow-visible lg:pr-6 xl:pr-10">
             <AnimatePresence mode="wait">
               <motion.div
-                key={active.kind === "brand" ? "ezweb" : active.id}
+                key={active.id}
                 role="region"
                 aria-live="polite"
                 initial={{ opacity: 0, y: reduceMotion ? 0 : 5 }}
@@ -228,31 +214,13 @@ export function ServicesShowcase() {
                   ))}
                 </ul>
                 <div className="mt-1 flex flex-wrap items-center gap-3">
-                  {active.kind === "brand" ? (
-                    <>
-                      <Link
-                        href="/services"
-                        className="inline-flex h-11 items-center justify-center gap-1.5 rounded-full bg-violet-500 px-7 text-sm font-medium text-white transition-colors hover:bg-violet-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-violet-400/55"
-                      >
-                        Explore
-                        <CtaChevron className="opacity-90" />
-                      </Link>
-                      <Link
-                        href={navItemContact.href}
-                        className="text-sm font-medium text-zinc-400 underline-offset-4 transition-colors hover:text-white hover:underline"
-                      >
-                        Contact
-                      </Link>
-                    </>
-                  ) : (
-                    <Link
-                      href={`${navItemContact.href}?topic=${active.id}`}
-                      className="inline-flex h-11 items-center justify-center gap-1.5 rounded-full bg-violet-500 px-7 text-sm font-medium text-white transition-colors hover:bg-violet-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-violet-400/55"
-                    >
-                      Get started
-                      <CtaChevron className="opacity-90" />
-                    </Link>
-                  )}
+                  <a
+                    href={navItemContact.href}
+                    className="inline-flex h-11 items-center justify-center gap-1.5 rounded-full bg-violet-500 px-7 text-sm font-medium text-white transition-colors hover:bg-violet-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-violet-400/55"
+                  >
+                    Get started
+                    <CtaChevron className="opacity-90" />
+                  </a>
                 </div>
               </motion.div>
             </AnimatePresence>
@@ -275,7 +243,7 @@ export function ServicesShowcase() {
                       const { x, y } = ringSlot(i);
                       return (
                         <motion.div
-                          key={item.kind === "brand" ? "ezweb" : item.id}
+                          key={item.id}
                           className="absolute left-0 top-0 overflow-visible"
                           style={{ width: 0, height: 0 }}
                           initial={false}
@@ -316,11 +284,8 @@ function OrbitNode({
   reduceMotion: boolean | null;
   orbitScale: number;
 }) {
-  const isBrand = item.kind === "brand";
-  const rim = isBrand
-    ? "from-violet-500 to-fuchsia-600"
-    : `bg-gradient-to-br ${item.rim}`;
-  const label = isBrand ? site.name : item.headline;
+  const cartoonId = item.id;
+  const label = item.headline;
   const iconPx = Math.round((isActive ? ORBIT_LARGE_BASE : ORBIT_SMALL_BASE) * orbitScale);
   const iconHalf = iconPx / 2;
 
@@ -333,41 +298,23 @@ function OrbitNode({
       aria-current={isActive ? true : undefined}
       whileTap={reduceMotion ? undefined : { scale: 0.98 }}
       aria-label={`${label}${isActive ? ", selected" : ""}`}
-      className={`group absolute flex flex-col items-center gap-1 border-0 bg-transparent p-0 text-center outline-none transition-[max-width] duration-300 ease-out ${isActive ? "max-w-[13rem]" : "max-w-[7rem]"}`}
+      className={`group absolute flex flex-col items-center gap-2 border-0 bg-transparent p-0 text-center outline-none transition-[max-width] duration-300 ease-out ${isActive ? "max-w-[16rem]" : "max-w-[9rem]"}`}
       initial={false}
       animate={{ x: -iconHalf, y: -iconHalf }}
       transition={nodeTransition}
     >
       <motion.span
-        className={`flex shrink-0 items-center justify-center rounded-full p-[1px] shadow-[0_0_28px_-6px_rgba(139,92,246,0.35)] transition-[box-shadow,ring-color] duration-300 group-hover:shadow-[0_0_36px_-4px_rgba(167,139,250,0.45)] group-focus-visible:ring-2 group-focus-visible:ring-violet-400/50 ${isBrand ? `bg-gradient-to-br ${rim}` : rim} ${isActive ? "ring-2 ring-violet-400/75 shadow-[0_0_48px_-6px_rgba(167,139,250,0.5)]" : "ring-1 ring-violet-400/25 group-hover:ring-violet-400/40"}`}
+        className={`flex shrink-0 items-center justify-center overflow-visible transition-transform duration-300 ${isActive ? "scale-110" : "scale-100 group-hover:scale-105"}`}
         initial={false}
         animate={{ width: iconPx, height: iconPx }}
         transition={nodeTransition}
       >
-        <span className="flex size-full items-center justify-center rounded-full bg-[#07070c]/90 backdrop-blur-sm">
-          {isBrand ? (
-            <Image
-              src={siteLogoPath}
-              alt=""
-              width={96}
-              height={96}
-              priority
-              unoptimized
-              className={`object-contain ${isActive ? "size-[58%]" : "size-[45%]"}`}
-            />
-          ) : (
-            <span
-              className={`max-w-[3.25rem] text-center font-[family-name:var(--font-brand)] font-semibold uppercase leading-tight text-white ${isActive ? "text-xs" : "text-[0.5625rem]"}`}
-            >
-              {item.tag}
-            </span>
-          )}
-        </span>
+        <ServiceCartoon id={cartoonId} active={isActive} className="size-full" />
       </motion.span>
       <span
-        className={`pointer-events-none block w-full px-0.5 font-[family-name:var(--font-brand)] font-semibold leading-snug text-white transition-[font-size] duration-300 ease-out ${isActive ? "text-sm sm:text-base" : "text-[0.625rem] sm:text-[0.6875rem]"}`}
+        className={`pointer-events-none block w-full px-0.5 font-[family-name:var(--font-brand)] font-semibold leading-snug text-white transition-[font-size,opacity] duration-300 ease-out ${isActive ? "text-base sm:text-lg" : "text-[0.6875rem] sm:text-xs opacity-90"}`}
       >
-        {isBrand ? site.name : item.headline}
+        {label}
       </span>
     </motion.button>
   );

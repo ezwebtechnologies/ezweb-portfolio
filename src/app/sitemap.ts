@@ -4,7 +4,7 @@ import { site } from "@/lib/site";
 export default function sitemap(): MetadataRoute.Sitemap {
   const origin = site.url.replace(/\/$/, "");
   const now = new Date();
-  const paths = ["", "/work", "/services", "/about", "/contact"] as const;
+  const paths = ["", "/contact"] as const;
   return paths.map((path) => ({
     url: `${origin}${path || "/"}`,
     lastModified: now,

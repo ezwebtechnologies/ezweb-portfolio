@@ -1,7 +1,9 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono, Syne } from "next/font/google";
 import { FloatingNavbar } from "@/components/navigation/floating-navbar";
+import { FloatingWhatsApp } from "@/components/floating-whatsapp";
 import { OrganizationJsonLd } from "@/components/organization-json-ld";
+import { SplashScreen } from "@/components/splash-screen";
 import {
   absoluteUrl,
   site,
@@ -13,24 +15,9 @@ import {
 } from "@/lib/site";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-  display: "swap",
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-  display: "swap",
-});
-
-const brandFont = Syne({
-  variable: "--font-brand",
-  subsets: ["latin"],
-  weight: ["600", "700"],
-  display: "swap",
-});
+const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"], display: "swap" });
+const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"], display: "swap" });
+const brandFont = Syne({ variable: "--font-brand", subsets: ["latin"], weight: ["600", "700", "800"], display: "swap" });
 
 const ogImageUrl = absoluteUrl(siteOgImagePath);
 const canonicalUrl = absoluteUrl("/");
@@ -53,21 +40,11 @@ export const metadata: Metadata = {
   creator: site.name,
   publisher: site.name,
   category: "business",
-  formatDetection: {
-    email: false,
-    address: false,
-    telephone: false,
-  },
+  formatDetection: { email: false, address: false, telephone: false },
   robots: {
     index: true,
     follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      "max-video-preview": -1,
-      "max-image-preview": "large",
-      "max-snippet": -1,
-    },
+    googleBot: { index: true, follow: true, "max-video-preview": -1, "max-image-preview": "large", "max-snippet": -1 },
   },
   alternates: { canonical: canonicalUrl },
   icons: {
@@ -104,22 +81,15 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html
-      lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} ${brandFont.variable} h-full min-h-0 antialiased`}
-    >
-      <body className="flex min-h-0 flex-col bg-[#050508] text-zinc-100 h-dvh max-h-dvh overflow-hidden">
+    <html lang="en" className={`${geistSans.variable} ${geistMono.variable} ${brandFont.variable} antialiased`}>
+      <body className="min-h-dvh bg-background text-foreground">
         <OrganizationJsonLd />
+        <SplashScreen />
         <FloatingNavbar />
-        <main className="fixed inset-x-0 bottom-0 z-0 flex min-h-0 flex-col overflow-hidden top-[var(--ez-nav-offset)]">
-          {children}
-        </main>
+        <main>{children}</main>
+        <FloatingWhatsApp />
       </body>
     </html>
   );

@@ -1,4 +1,13 @@
-import { absoluteUrl, site, siteStructuredLogoPath } from "@/lib/site";
+import {
+  absoluteUrl,
+  site,
+  siteContactEmail,
+  siteContactPhones,
+  siteFounders,
+  siteServiceAreas,
+  siteSocials,
+  siteStructuredLogoPath,
+} from "@/lib/site";
 
 export function OrganizationJsonLd() {
   const base = site.url.replace(/\/$/, "");
@@ -6,10 +15,11 @@ export function OrganizationJsonLd() {
 
   const graph = [
     {
-      "@type": "Organization",
+      "@type": ["Organization", "ProfessionalService"],
       "@id": `${base}/#organization`,
       name: site.name,
       url: site.url,
+      email: siteContactEmail,
       description: site.seoDescription,
       logo: {
         "@type": "ImageObject",
@@ -19,6 +29,17 @@ export function OrganizationJsonLd() {
         height: 512,
       },
       image: logoUrl,
+      telephone: siteContactPhones.map((p) => `+${p.e164}`),
+      areaServed: siteServiceAreas.map((name) => ({ "@type": "AdministrativeArea", name })),
+      founder: siteFounders.map((f) => ({ "@type": "Person", name: f.name, jobTitle: f.role })),
+      contactPoint: siteContactPhones.map((p) => ({
+        "@type": "ContactPoint",
+        telephone: `+${p.e164}`,
+        contactType: "sales",
+        areaServed: "IN",
+        availableLanguage: ["en", "te", "hi"],
+      })),
+      sameAs: siteSocials.map((s) => s.href),
     },
     {
       "@type": "WebSite",
@@ -35,10 +56,7 @@ export function OrganizationJsonLd() {
     <script
       type="application/ld+json"
       dangerouslySetInnerHTML={{
-        __html: JSON.stringify({
-          "@context": "https://schema.org",
-          "@graph": graph,
-        }),
+        __html: JSON.stringify({ "@context": "https://schema.org", "@graph": graph }),
       }}
     />
   );
