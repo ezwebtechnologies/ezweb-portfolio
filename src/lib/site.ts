@@ -4,7 +4,7 @@ export const site = {
   name: "EZWeb",
   url: siteProductionUrl,
   /** Browser tab (next to favicon) & primary SEO title (keep to ~60 characters). */
-  seoTitle: "EZWeb | Web Design & SEO — Hyderabad, Bangalore, India",
+  seoTitle: "EZWeb | Your Complete Digital Growth Partner",
   /** Meta description for search & link previews (~150–160 characters). */
   seoDescription:
     "EZWeb builds premium websites and grows local visibility with Google Business, SEO, and lead generation for businesses across India—Hyderabad, Bangalore & beyond.",
@@ -29,6 +29,7 @@ export const siteLogoPath = "/logo/logo.png";
 /** Founder headshots — place files under public/logo/founders/ */
 export const siteFounderPhotos = {
   easwanth: "/logo/founders/easwanth-konduru.jpg",
+  venkateswarlu: "/logo/founders/venkateswarlu-nerella.jpg",
 } as const;
 
 /** Square 512×512; used in metadata, PWA, and Organization `logo` for Google. */
@@ -91,7 +92,7 @@ export const siteFounders: readonly Founder[] = [
     photo: siteFounderPhotos.easwanth,
     phone: siteContactPhones[0],
   },
-  { name: "Venkateswarlu Nerella", role: "Co-founder", phone: siteContactPhones[1] },
+  { name: "Venkateswarlu Nerella", role: "Co-founder", photo: siteFounderPhotos.venkateswarlu, phone: siteContactPhones[1] },
 ];
 
 export const siteServiceAreas = ["India", "Hyderabad", "Bangalore"] as const;
