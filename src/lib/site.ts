@@ -53,6 +53,12 @@ export const navItemsPrimary: NavItem[] = [
 
 export const navItemContact: NavItem = navItemsPrimary[4];
 
+/** Indexable routes for sitemap.xml (sections on / use in-page anchors, not separate URLs). */
+export const siteSitemapRoutes = [
+  { path: "/", priority: 1, changeFrequency: "weekly" as const },
+  { path: "/contact", priority: 0.8, changeFrequency: "monthly" as const },
+] as const;
+
 export const siteTagline = "U Dream It. We Make It." as const;
 
 export const siteMission =
