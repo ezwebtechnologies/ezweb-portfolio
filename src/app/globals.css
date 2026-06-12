@@ -21,8 +21,8 @@ html.light {
 
 @media (min-width: 1920px) {
   :root {
-    --ez-ui-scale: 1.15;
-    --ez-orbit-scale: 1.15;
+    --ez-ui-scale: 1.30;
+    --ez-orbit-scale: 1.30;
   }
 }
 
